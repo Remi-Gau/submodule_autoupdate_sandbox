@@ -67,13 +67,12 @@ jobs:
         with:
           submodules: true
 
-      https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
+      # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
       - name: Update all submodules [WIP]
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
+        run: git submodule update --remote --merge # fatal: refusing to merge unrelated histories
 
         # run: git submodule foreach git pull # fatal: Need to specify how to reconcile divergent branches.
-
-        run: git submodule update --remote --merge # fatal: refusing to merge unrelated histories
 
       # - name: Update some submodules # detached HEAD messes this up
       #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
