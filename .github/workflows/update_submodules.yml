@@ -1,9 +1,17 @@
 name: update submodules
 
-# requires sudmodules URL to be "https...""
+# requires sudmodules URL to be "https..." (no ssh)
+#
 # requires submodule to be specified to follow a specific branch (stored in .gitmodules)
-# clone them with 
-#  git submodule add -b branch_to_follow https://github.com/... path
+#
+# clone them with:
+#
+#   git submodule add -b branch_to_follow https://github.com/... submodule_path
+#
+# or specify it with:
+#
+#   git config -f .gitmodules submodule.submodule_path.branch branch_to_follow
+#
 
   # Uses the cron schedule for github actions
   #
@@ -39,7 +47,7 @@ env:
   # to update all submodules
   SUBMOD_TO_UPDATE: "*"
   # otherwise
-  FOO: "lib/sub_1,lib/sub_2"
+  FOO: "lib/sub_1 lib/sub_2"
 
 defaults:
   run:
@@ -59,20 +67,24 @@ jobs:
         with:
           submodules: true
 
+      # check out the correct branch for each submodule and pull them all
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
       - name: Update submodules
-        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         run: |
-              git submodule
-              nb_submod=$(git submodule | wc -l)
               start_dir=$PWD
+              if [ "${SUBMOD_TO_UPDATE}"="*" ]; then
+                  submodules=$(git submodule | awk '{print $2}')
+                  nb_submod=$(echo "${submodules}" | wc -l)
+              fi
+              echo "UPDATING ${nb_submod} SUBMODULES"
+              echo ${submodules}
               for i in $(seq 1 ${nb_submod}); do
-              path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
-              branch=$(git config --get --file .gitmodules submodule.${path}.branch)
-              echo ${path} ${branch}
-              cd ${path}
-              git checkout ${branch}
-              cd ${start_dir}
+                  path=$(echo ${submodules} | awk -v i=${i} '{print $i}')
+                  branch=$(git config --get --file .gitmodules submodule.${path}.branch)
+                  echo "switching submodule ${path} to ${branch}"
+                  cd "${path}"
+                  git checkout ${branch}
+                  cd "${start_dir}"
               done
               git submodule update --remote --merge
 

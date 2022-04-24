@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
-nb_submod=$(git submodule | wc -l)
-
 start_dir=$PWD
+SUBMOD_TO_UPDATE="*"
+
+if [ "${SUBMOD_TO_UPDATE}"="*" ]; then
+    submodules=$(git submodule | awk '{print $2}')
+    nb_submod=$(echo "${submodules}" | wc -l)
+fi
+
+echo "UPDATING ${nb_submod} SUBMODULES"
+echo ${submodules}
 
 for i in $(seq 1 ${nb_submod}); do
-
-    path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
-    branch=$(git submodule | awk -v i=${i} '{if(NR==i) print $3}' | cut -c 8- | rev | cut -c 2- | rev)
-
-    echo ${path} ${branch}
-
-    cd ${path}
+    path=$(echo ${submodules} | awk -v i=${i} '{print $i}')
+    branch=$(git config --get --file .gitmodules submodule.${path}.branch)
+    echo "switching submodule ${path} to ${branch}"
+    cd "${path}"
     git checkout ${branch}
-    git pull
-    cd ${start_dir} 
-
+    cd "${start_dir}"
 done
+
+git submodule update --remote --merge
