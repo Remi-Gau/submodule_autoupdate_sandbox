@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 start_dir=$PWD
-SUBMOD_TO_UPDATE="lib/sub_1 lib/sub_2"
+SUBMOD_TO_UPDATE="*"
 
 if [ "${SUBMOD_TO_UPDATE}" = "*" ]; then
     submodules=$(git submodule | awk '{print $2}')
