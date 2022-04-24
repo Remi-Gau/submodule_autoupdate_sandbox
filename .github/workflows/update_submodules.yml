@@ -29,7 +29,6 @@ env:
 
 jobs:
   update_submodules:
-
     # only trigger update on upstream repo
     if: github.repository_owner == 'Remi-Gau'
 
@@ -42,7 +41,7 @@ jobs:
           submodules: true
 
       - name: Update submodules
-        if: ${{ env.SUBMOD_TO_UPDATE == "*" }}
+        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         run: git submodule foreach git pull
 
       # if there have been changes,
