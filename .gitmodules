@@ -1,0 +1,4 @@
+[submodule "lib/sub_2"]
+	path = lib/sub_2
+	url = git@github.com:Remi-Gau/sub_2.git
+	datalad-url = git@github.com:Remi-Gau/sub_2.git
