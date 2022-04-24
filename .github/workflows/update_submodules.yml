@@ -67,13 +67,13 @@ jobs:
         with:
           submodules: true
 
-      # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
-      # - name: Update all submodules [WIP]
-      #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
+      https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
+      - name: Update all submodules [WIP]
+        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
 
         # run: git submodule foreach git pull # fatal: Need to specify how to reconcile divergent branches.
 
-        # run: git submodule update --remote --merge # fatal: refusing to merge unrelated histories
+        run: git submodule update --remote --merge # fatal: refusing to merge unrelated histories
 
       # - name: Update some submodules # detached HEAD messes this up
       #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
@@ -91,9 +91,9 @@ jobs:
       #         cd ${start_dir}
       #         done
 
-      - name: Update some submodules
-        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-        run: datalad update -d . --merge -r -R 1
+      # - name: Update some submodules
+      #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
+      #   run: datalad update -d . --merge -r -R 1
 
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
