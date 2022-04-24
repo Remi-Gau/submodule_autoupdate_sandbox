@@ -54,6 +54,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Install datalad
+      run: |
+        sudo apt-get -y -qq update
+        sudo apt-get -y install datalad
+
       - name: Clone repo
         uses: actions/checkout@v3
         with:
@@ -62,24 +68,30 @@ jobs:
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
       # - name: Update all submodules [WIP]
       #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-        # run: git submodule foreach git pull
-        # run: git submodule update --remote --merge
+
+        # run: git submodule foreach git pull # fatal: Need to specify how to reconcile divergent branches.
+
+        # run: git submodule update --remote --merge # fatal: refusing to merge unrelated histories
+
+      # - name: Update some submodules # detached HEAD messes this up
+      #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
+      #   run: |
+      #         git submodule
+      #         nb_submod=$(git submodule | wc -l)
+      #         start_dir=$PWD
+      #         for i in $(seq 1 ${nb_submod}); do
+      #         path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
+      #         branch=$(git submodule | awk -v i=${i} '{if(NR==i) print $3}' | cut -c 8- | rev | cut -c 2- | rev)
+      #         echo ${path} ${branch}
+      #         cd ${path}
+      #         git checkout ${branch}
+      #         git pull
+      #         cd ${start_dir}
+      #         done
 
       - name: Update some submodules
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-        run: |
-              git submodule
-              nb_submod=$(git submodule | wc -l)
-              start_dir=$PWD
-              for i in $(seq 1 ${nb_submod}); do
-              path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
-              branch=$(git submodule | awk -v i=${i} '{if(NR==i) print $3}' | cut -c 8- | rev | cut -c 2- | rev)
-              echo ${path} ${branch}
-              cd ${path}
-              git checkout ${branch}
-              git pull
-              cd ${start_dir}
-              done
+        run: datalad update --merge -r -R 1
 
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
