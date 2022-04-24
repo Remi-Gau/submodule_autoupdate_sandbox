@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
 
 start_dir=$PWD
-SUBMOD_TO_UPDATE="*"
+SUBMOD_TO_UPDATE="lib/sub_1 lib/sub_2"
 
-if [ "${SUBMOD_TO_UPDATE}"="*" ]; then
+if [ "${SUBMOD_TO_UPDATE}" = "*" ]; then
     submodules=$(git submodule | awk '{print $2}')
-    nb_submod=$(echo "${submodules}" | wc -l)
+else
+    submodules=$(echo -e ${SUBMOD_TO_UPDATE} | sed "s/ /\n/g")
 fi
 
-echo "UPDATING ${nb_submod} SUBMODULES"
-echo ${submodules}
+nb_submod=$(echo "${submodules}" | wc -l)
+
+echo -e "\nUPDATING ${nb_submod} SUBMODULES"
+echo -e "${submodules}"
 
 for i in $(seq 1 ${nb_submod}); do
-    path=$(echo ${submodules} | awk -v i=${i} '{print $i}')
+    path=$(echo -e ${submodules} | awk -v i=${i} '{print $i}')
     branch=$(git config --get --file .gitmodules submodule.${path}.branch)
-    echo "switching submodule ${path} to ${branch}"
-    cd "${path}"
+    echo -e "\nswitching submodule ${path} to ${branch}"
+    cd "${path}" || exit
     git checkout ${branch}
     cd "${start_dir}"
 done
