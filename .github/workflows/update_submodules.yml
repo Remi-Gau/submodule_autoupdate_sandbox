@@ -1,0 +1,60 @@
+name: update submodules
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
+
+  # Uses the cron schedule for github actions
+  #
+  # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#scheduled-events
+  #
+  #          ┌───────────── minute (0 - 59)
+  #          │ ┌───────────── hour (0 - 23)
+  #          │ │ ┌───────────── day of the month (1 - 31)
+  #          │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+  #          │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+  #          │ │ │ │ │
+  #          │ │ │ │ │
+  #          │ │ │ │ │
+  #          * * * * *
+
+  schedule:
+    - cron: "* * * * *"
+
+env:
+  SUBMOD_TO_UPDATE: "*"
+
+jobs:
+  update_submodules:
+
+    # only trigger update on upstream repo
+    if: github.repository_owner == 'Remi-Gau'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Update submodules
+        if: ${{ env.SUBMOD_TO_UPDATE == "*" }}
+        run: git submodule foreach git pull
+
+      # if there have been changes,
+      # a PR is created using the checkout branch for this workflow
+      # https://github.com/peter-evans/create-pull-request
+      - name: Create Pull-Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Update submodules
+          delete-branch: true
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
