@@ -5,13 +5,6 @@ name: update submodules
 # clone them with 
 #  git submodule add -b branch_to_follow https://github.com/... path
 
-on:
-  push:
-    branches:
-      - main
-      - master
-      - dev
-
   # Uses the cron schedule for github actions
   #
   # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#scheduled-events
@@ -26,6 +19,12 @@ on:
   #          │ │ │ │ │
   #          * * * * *
 
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
   schedule:
     - cron: "* * * * *"
 
@@ -37,15 +36,10 @@ on:
         required: false
 
 env:
-  # use
+  # to update all submodules
   SUBMOD_TO_UPDATE: "*"
-  # when all submodules need to be updated and have the same upstream branch name
   # otherwise
-  # SUBMOD_TO_UPDATE:
-  #   - path": "lib/sub_1"
-  #     branch": "master"
-  #   - path: "lib/sub_2"
-  #     branch: "main"
+  FOO: ["lib/sub_1", "lib/sub_2"]
 
 defaults:
   run:
@@ -60,27 +54,13 @@ jobs:
 
     steps:
 
-      # - name: Install datalad
-      #   run: |
-      #     sudo apt-get -y -qq update
-      #     sudo apt-get -y install datalad
-
       - name: Clone repo
         uses: actions/checkout@v3
         with:
           submodules: true
 
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
-      # - name: Update all submodules [WIP]
-      #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-      #   run: |
-      #         git submodule
-      #         git submodule update --remote --merge  
-        # fatal: refusing to merge unrelated histories
-
-        # run: git submodule foreach git pull # fatal: Need to specify how to reconcile divergent branches.
-
-      - name: Update some submodules # detached HEAD messes this up
+      - name: Update submodules
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         run: |
               git submodule
@@ -96,13 +76,6 @@ jobs:
               done
               git submodule update --remote --merge
 
-            # git pull
-      #         branch=$(git submodule | awk -v i=${i} '{if(NR==i) print $3}' | cut -c 8- | rev | cut -c 2- | rev)
-
-      # - name: Update some submodules
-      #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-      #   run: datalad update -d . --merge -r -R 1
-
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
       # https://github.com/peter-evans/create-pull-request
@@ -111,8 +84,3 @@ jobs:
         with:
           commit-message: Update submodules
           delete-branch: true
-
-      - name: Check outputs
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
