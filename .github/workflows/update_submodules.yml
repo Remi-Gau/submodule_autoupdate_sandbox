@@ -32,7 +32,19 @@ on:
         required: false
 
 env:
-  SUBMOD_TO_UPDATE: "*"
+  # use 
+  #   SUBMOD_TO_UPDATE: "*" 
+  # when all submodules need to be updated and have the same upstream branch name
+  # otherwise
+  SUBMOD_TO_UPDATE: [
+    { "path": "lib/sub_1", "branch": "master" },
+    { "name": "lib/sub_2", "quantity": "main" },
+  ]
+
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   update_submodules:
@@ -48,9 +60,21 @@ jobs:
         with:
           submodules: true
 
-      - name: Update submodules
+      # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
+      - name: Update all submodules [WIP]
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         run: git submodule update --remote --merge
+
+      - name: Update some submodules
+        if: ${{ env.SUBMOD_TO_UPDATE != '*' }}
+        run: |
+          paths=${{ env.SUBMOD_TO_UPDATE.*.path }}
+          echo ${paths}
+          for sub_mod in ${paths}
+          do
+            echo ${sub_mod}
+            git submodule update --remote --merge ${sub_mod}
+          done
 
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
