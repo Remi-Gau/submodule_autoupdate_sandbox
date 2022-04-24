@@ -39,7 +39,7 @@ env:
   # to update all submodules
   SUBMOD_TO_UPDATE: "*"
   # otherwise
-  FOO: ["lib/sub_1", "lib/sub_2"]
+  FOO: "lib/sub_1,lib/sub_2"
 
 defaults:
   run:
