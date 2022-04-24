@@ -63,7 +63,7 @@ jobs:
       - name: Update all submodules [WIP]
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         # run: git submodule foreach git pull
-        run: git submodule update --remote --merge
+        # run: git submodule update --remote --merge
 
       - name: Update some submodules
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
