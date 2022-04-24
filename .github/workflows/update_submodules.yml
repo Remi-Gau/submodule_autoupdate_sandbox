@@ -32,15 +32,15 @@ on:
         required: false
 
 env:
-  # use 
-  #   SUBMOD_TO_UPDATE: "*" 
+  # use
+  #   SUBMOD_TO_UPDATE: "*"
   # when all submodules need to be updated and have the same upstream branch name
   # otherwise
-  SUBMOD_TO_UPDATE: [
-    { "path": "lib/sub_1", "branch": "master" },
-    { "name": "lib/sub_2", "quantity": "main" },
-  ]
-
+  SUBMOD_TO_UPDATE:
+    - path": "lib/sub_1"
+      branch": "master"
+    - path: "lib/sub_2"
+      branch: "main"
 
 defaults:
   run:
@@ -48,7 +48,6 @@ defaults:
 
 jobs:
   update_submodules:
-  
     # only trigger update on upstream repo
     if: github.repository_owner == 'Remi-Gau'
 
