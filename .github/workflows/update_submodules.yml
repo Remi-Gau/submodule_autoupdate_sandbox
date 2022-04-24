@@ -83,7 +83,7 @@ jobs:
                   path=$(echo -e ${submodules} | awk -v i=${i} '{print $i}')
                   branch=$(git config --get --file .gitmodules submodule.${path}.branch)
                   echo -e "\nswitching submodule ${path} to ${branch}"
-                  cd "${path}" || exit
+                  cd "${path}"
                   git checkout ${branch}
                   cd "${start_dir}"
               done
