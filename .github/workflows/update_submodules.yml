@@ -55,10 +55,10 @@ jobs:
 
     steps:
 
-    - name: Install datalad
-      run: |
-        sudo apt-get -y -qq update
-        sudo apt-get -y install datalad
+      - name: Install datalad
+        run: |
+          sudo apt-get -y -qq update
+          sudo apt-get -y install datalad
 
       - name: Clone repo
         uses: actions/checkout@v3
