@@ -24,6 +24,7 @@ on:
   schedule:
     - cron: "* * * * *"
 
+  # to trigger update manually from the Action tab in github
   workflow_dispatch:
     inputs:
       log:
@@ -35,6 +36,7 @@ env:
 
 jobs:
   update_submodules:
+  
     # only trigger update on upstream repo
     if: github.repository_owner == 'Remi-Gau'
 
@@ -48,7 +50,7 @@ jobs:
 
       - name: Update submodules
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-        run: git submodule foreach git pull
+        run: git submodule update --remote --merge
 
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
