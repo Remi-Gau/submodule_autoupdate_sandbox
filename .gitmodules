@@ -2,6 +2,12 @@
 	path = lib/sub_2
 	url = https://github.com/Remi-Gau/sub_2.git
 	datalad-url = https://github.com/Remi-Gau/sub_1.git
+	branch = master
 [submodule "lib/sub_1"]
 	path = lib/sub_1
 	url = https://github.com/Remi-Gau/sub_1.git
+	branch = main
+[submodule "lib/sub_3"]
+	path = lib/sub_3
+	url = https://github.com/Remi-Gau/sub_3.git
+	branch = main

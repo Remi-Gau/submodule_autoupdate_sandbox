@@ -14,9 +14,6 @@ for i in $(seq 1 ${nb_submod}); do
     cd ${path}
     git checkout ${branch}
     git pull
-    cd ${start_dir}
+    cd ${start_dir} 
 
 done
-
-datalad update [-h] [-s SIBLING] [--merge [ALLOWED]] [--how [{fetch|merge|ff-only|reset|checkout}]]
-                      [--how-subds [{fetch|merge
