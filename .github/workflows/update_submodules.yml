@@ -1,5 +1,7 @@
 name: update submodules
 
+# requires sudmodules URL to be "https...""
+
 on:
   push:
     branches:
