@@ -68,6 +68,7 @@ jobs:
       - name: Update some submodules
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         run: |
+              git submodule
               nb_submod=$(git submodule | wc -l)
               start_dir=$PWD
               for i in $(seq 1 ${nb_submod}); do
