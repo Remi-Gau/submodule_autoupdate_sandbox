@@ -33,14 +33,14 @@ on:
 
 env:
   # use
-  #   SUBMOD_TO_UPDATE: "*"
+  SUBMOD_TO_UPDATE: "*"
   # when all submodules need to be updated and have the same upstream branch name
   # otherwise
-  SUBMOD_TO_UPDATE:
-    - path": "lib/sub_1"
-      branch": "master"
-    - path: "lib/sub_2"
-      branch: "main"
+  # SUBMOD_TO_UPDATE:
+  #   - path": "lib/sub_1"
+  #     branch": "master"
+  #   - path: "lib/sub_2"
+  #     branch: "main"
 
 defaults:
   run:
@@ -62,18 +62,23 @@ jobs:
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
       - name: Update all submodules [WIP]
         if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-        run: git submodule update --remote --merge
+        run: git submodule foreach git pull
+        # run: git submodule update --remote --merge
 
       - name: Update some submodules
-        if: ${{ env.SUBMOD_TO_UPDATE != '*' }}
+        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
         run: |
-          paths=${{ env.SUBMOD_TO_UPDATE.*.path }}
-          echo ${paths}
-          for sub_mod in ${paths}
-          do
-            echo ${sub_mod}
-            git submodule update --remote --merge ${sub_mod}
-          done
+              nb_submod=$(git submodule | wc -l)
+              start_dir=$PWD
+              for i in $(seq 1 ${nb_submod}); do
+              path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
+              branch=$(git submodule | awk -v i=${i} '{if(NR==i) print $3}' | cut -c 8- | rev | cut -c 2- | rev)
+              echo ${path} ${branch}
+              cd ${path}
+              git checkout ${branch}
+              git pull
+              cd ${start_dir}
+              done
 
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
