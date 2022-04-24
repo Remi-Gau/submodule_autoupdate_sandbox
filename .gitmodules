@@ -2,3 +2,6 @@
 	path = lib/sub_2
 	url = git@github.com:Remi-Gau/sub_2.git
 	datalad-url = git@github.com:Remi-Gau/sub_2.git
+[submodule "lib/sub_1"]
+	path = lib/sub_1
+	url = git@github.com:Remi-Gau/sub_1.git
