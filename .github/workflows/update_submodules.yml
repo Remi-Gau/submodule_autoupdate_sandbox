@@ -1,6 +1,9 @@
 name: update submodules
 
 # requires sudmodules URL to be "https...""
+# requires submodule to be specified to follow a specific branch (stored in .gitmodules)
+# clone them with 
+#  git submodule add -b branch_to_follow https://github.com/... path
 
 on:
   push:
@@ -57,10 +60,10 @@ jobs:
 
     steps:
 
-      - name: Install datalad
-        run: |
-          sudo apt-get -y -qq update
-          sudo apt-get -y install datalad
+      # - name: Install datalad
+      #   run: |
+      #     sudo apt-get -y -qq update
+      #     sudo apt-get -y install datalad
 
       - name: Clone repo
         uses: actions/checkout@v3
@@ -68,27 +71,33 @@ jobs:
           submodules: true
 
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
-      - name: Update all submodules [WIP]
-        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
-        run: git submodule update --remote --merge # fatal: refusing to merge unrelated histories
-
-        # run: git submodule foreach git pull # fatal: Need to specify how to reconcile divergent branches.
-
-      # - name: Update some submodules # detached HEAD messes this up
+      # - name: Update all submodules [WIP]
       #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
       #   run: |
       #         git submodule
-      #         nb_submod=$(git submodule | wc -l)
-      #         start_dir=$PWD
-      #         for i in $(seq 1 ${nb_submod}); do
-      #         path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
+      #         git submodule update --remote --merge  
+        # fatal: refusing to merge unrelated histories
+
+        # run: git submodule foreach git pull # fatal: Need to specify how to reconcile divergent branches.
+
+      - name: Update some submodules # detached HEAD messes this up
+        if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
+        run: |
+              git submodule
+              nb_submod=$(git submodule | wc -l)
+              start_dir=$PWD
+              for i in $(seq 1 ${nb_submod}); do
+              path=$(git submodule | awk -v i=${i} '{if(NR==i) print $2}')
+              branch=$(git config --get --file .gitmodules submodule.${path}.branch)
+              echo ${path} ${branch}
+              cd ${path}
+              git checkout ${branch}
+              cd ${start_dir}
+              done
+              git submodule update --remote --merge
+
+            # git pull
       #         branch=$(git submodule | awk -v i=${i} '{if(NR==i) print $3}' | cut -c 8- | rev | cut -c 2- | rev)
-      #         echo ${path} ${branch}
-      #         cd ${path}
-      #         git checkout ${branch}
-      #         git pull
-      #         cd ${start_dir}
-      #         done
 
       # - name: Update some submodules
       #   if: ${{ env.SUBMOD_TO_UPDATE == '*' }}
