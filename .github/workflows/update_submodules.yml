@@ -86,12 +86,15 @@ jobs:
                   path=$(echo -e ${submodules} | awk -v i=${i} '{print $i}')
                   branch=$(git config --get --file .gitmodules submodule.${path}.branch)
                   echo -e "\nswitching submodule ${path} to ${branch}"
-                  cd "${path}" || exit
-                  git branch -a
-                  git checkout -b ${branch} origin/${branch}
-                  cd "${start_dir}"
+                  git -C ${path} fetch --depth=1 origin "refs/heads/${branch}"
               done
               git submodule update --remote --merge
+
+
+      # cd "${path}" || exit
+      # git branch -a
+      # git checkout -b ${branch} origin/${branch}
+      # cd "${start_dir}"
 
       # if there have been changes,
       # a PR is created using the checkout branch for this workflow
