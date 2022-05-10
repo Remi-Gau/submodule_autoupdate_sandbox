@@ -72,6 +72,7 @@ jobs:
       - name: Update submodules
         run: |
               set -e -u -x
+              git submodule update --init --remote --recursive
               start_dir=$PWD
               if [ "${SUBMOD_TO_UPDATE}" = "*" ]; then
                   submodules=$(git submodule | awk '{print $2}')
