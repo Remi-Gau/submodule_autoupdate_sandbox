@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 start_dir=$PWD
 SUBMOD_TO_UPDATE="lib/sub_3 lib/sub_1"
 
