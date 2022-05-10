@@ -85,6 +85,9 @@ jobs:
                   branch=$(git config --get --file .gitmodules submodule.${path}.branch)
                   echo -e "\nswitching submodule ${path} to ${branch}"
                   git -C ${path} fetch --depth=1 origin "refs/heads/${branch}"
+                  cd "${path}" || exit
+                  git checkout ${branch}
+                  cd "${start_dir}"
               done
               git submodule update --remote --merge
 
