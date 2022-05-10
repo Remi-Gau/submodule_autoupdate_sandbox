@@ -2,7 +2,7 @@
 	path = lib/sub_2
 	url = https://github.com/Remi-Gau/sub_2.git
 	datalad-url = https://github.com/Remi-Gau/sub_1.git
-	branch = main
+	branch = dev
 [submodule "lib/sub_3"]
 	path = lib/sub_3
 	url = https://github.com/Remi-Gau/sub_3.git
@@ -10,4 +10,4 @@
 [submodule "lib/sub_1"]
 	path = lib/sub_1
 	url = https://github.com/Remi-Gau/sub_1.git
-	branch = master
+	branch = dev
