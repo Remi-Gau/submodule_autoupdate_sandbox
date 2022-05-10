@@ -34,7 +34,7 @@ on:
       - master
       - dev
   schedule:
-    - cron: "* * * * *"
+    - cron: "0 0 * * 1"
 
   # to trigger update manually from the Action tab in github
   workflow_dispatch:
