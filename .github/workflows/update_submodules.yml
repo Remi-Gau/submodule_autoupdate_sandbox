@@ -80,8 +80,6 @@ jobs:
               nb_submod=$(echo "${submodules}" | wc -l)
               echo -e "\nUPDATING ${nb_submod} SUBMODULES"
               echo -e "${submodules}"
-              git submodule sync
-              git submodule update --init --recursive --remote
               for i in $(seq 1 ${nb_submod}); do
                   path=$(echo -e ${submodules} | awk -v i=${i} '{print $i}')
                   branch=$(git config --get --file .gitmodules submodule.${path}.branch)
