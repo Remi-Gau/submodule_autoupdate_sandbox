@@ -87,6 +87,7 @@ jobs:
                   branch=$(git config --get --file .gitmodules submodule.${path}.branch)
                   echo -e "\nswitching submodule ${path} to ${branch}"
                   cd "${path}" || exit
+                  git branch -a
                   git checkout -b ${branch} origin/${branch}
                   cd "${start_dir}"
               done
