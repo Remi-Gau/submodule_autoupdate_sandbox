@@ -86,7 +86,7 @@ jobs:
                   echo -e "\nswitching submodule ${path} to ${branch}"
                   cd "${path}" || exit
                   git fetch
-                  git branch
+                  git branch -a
                   git checkout ${branch}
                   cd "${start_dir}"
               done
