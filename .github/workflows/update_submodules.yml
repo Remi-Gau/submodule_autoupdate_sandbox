@@ -67,10 +67,16 @@ jobs:
         with:
           submodules: true
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10          
+
       - name: install datalad
-        run: |
-              sudo apt-get update && sudo apt-get upgrade
-              sudo apt-get install datalad
+        run: pip install datalad
+
+      - name: info
+        run: |              
               git --version
               datalad --version
 
