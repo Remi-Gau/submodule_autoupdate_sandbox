@@ -67,13 +67,18 @@ jobs:
         with:
           submodules: true
 
+      - name: Update git
+        run: |
+              git --version
+              apt-get update && apt-get upgrade && apt-get install git
+              git --version
+
       # check out the correct branch for each submodule and pull them all
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
       - name: Update submodules
         run: |
               set -e -u -x
               git submodule update --init --recursive
-              start_dir=$PWD
               if [ "${SUBMOD_TO_UPDATE}" = "*" ]; then
                   submodules=$(git submodule | awk '{print $2}')
               else
