@@ -67,11 +67,12 @@ jobs:
         with:
           submodules: true
 
-      - name: Update git
+      - name: install datalad
         run: |
+              sudo apt-get update && sudo apt-get upgrade
+              sudo apt-get install datalad
               git --version
-              apt-get update && apt-get upgrade && apt-get install git
-              git --version
+              datalad --version
 
       # check out the correct branch for each submodule and pull them all
       # https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
